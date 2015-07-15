@@ -3,11 +3,18 @@
 #new line every 10
 
 
+puts "Please input an integer(1-100): "
+
 #get N
 @n = gets.to_i
 @a = 0
 @b = 1
 @t = 0
+
+puts
+print "The Fibonacci sequence-of-number(1-"
+print @n
+puts "):"
 
 #Xun-huan-shu-chu Fibonacci sequence-of-number
 @i = 1
