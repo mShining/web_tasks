@@ -1,6 +1,7 @@
 #echo Fibonacci sequence-of-number
 #150714 by mShining
 #new line every 10
+#version -2.0(150722)
 
 @flag=0
 
@@ -14,14 +15,13 @@ while @flag===0
   if (1<=@n and @n<=100)
     @flag=1
 
-    @a = 0
-    @b = 1
-    @t = 0
+    @former = 0
+    @latter = 1
+    @temp = 0
 
     puts
-    print "The Fibonacci sequence-of-number(1-"
-    print @n
-    puts "):"
+    puts "The Fibonacci sequence-of-number(1-#{@n}):"
+
 
     #Xun-huan-shu-chu Fibonacci sequence-of-number
     @i = 1
@@ -30,17 +30,15 @@ while @flag===0
       #print "i'm here1"
 
       if (@i === @n)
-        print @a
-        print "."
+        print "#{@former}."
         @i = @i + 1
         next
       end
 
-      print @a
-      print ","
-      @t = @a;
-      @a = @b;
-      @b = @b + @t;
+      print "#{@former},"
+      @temp = @former;
+      @former = @latter;
+      @latter = @latter + @temp;
 
       #new line every 10
       if @i%10===0
