@@ -1,0 +1,24 @@
+<!-- /add In ERB -->
+
+
+<h3>&nbsp;</h3> <!-- for beauty-->
+<h2>This is LeaveMessage Page</h2>
+<h3>&nbsp;</h3> <!-- for beauty-->
+
+<div class="error">
+<%= @error %>
+</div>
+
+<form class="form-inline" method="POST" action="/add">
+	<div class="form-group">
+		<label>Author</label>
+		<input type="text"  name="author">
+	</div>
+	<div class="form-group">
+		<label>Message</label>
+		<input type="text"  name="message">
+	</div>
+	<button type="submit" class="btn btn-default">Add now</button>
+</form>
+
+<a class="" href="/"><button class="btn btn-link">Index</button></a>

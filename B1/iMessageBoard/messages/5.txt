@@ -1,0 +1,4 @@
+<id>:5
+<author>:Shakespeare
+<created_at>:2015-07-24 00:59:44 +0800
+<message>:笨蛋自以为聪明，聪明人才知道自己是笨蛋。

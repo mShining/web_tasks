@@ -1,0 +1,55 @@
+<!-- index ( / ) In ERB -->
+
+
+<h1><a href="/">Message Board Version 1.0</a></h1>
+
+<div class="form-group" align="center">
+<form class="form-inline" method='get' action="/">
+	<select class="form-control" name='select'>
+		<option value="id">ID</option>
+		<option value="author" selected='selected'>Author</option>
+	</select>
+
+		<label>    :    </label>
+		<input class="form-control" type='text' name="value">
+	<button type='submit' class="btn btn-default">Search</button>
+</form>
+</div>
+
+<table class="table table-striped" align="center">
+	<tr>
+		<th>Message</th>
+		<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th> <!-- for beauty! -->
+		<th>Author</th>
+		<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th> <!-- for beauty! -->
+		<th>Handle</th>
+	</tr>
+<% if not @info.nil? %>
+<% @info.each do |info| %>
+	<% msg = Message.new(File.join("messages","#{info}.txt")) %>
+	<tr>
+		<td>
+			<%= msg.message %>
+		</td>
+		<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th> <!-- for beauty! -->
+
+		<td>
+			<%= msg.author %>
+		</td>
+		<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th> <!-- for beauty! -->
+
+		<td>
+				<form method="get" action="">
+					<button class="btn btn-danger" type="submit">Delete it</button>
+				</form>
+		</td>
+
+	</tr>
+<% end %>
+<% end %>
+<%= @error %>
+</table>
+
+<div align="right" > <!-- for beauty! -->
+<a href="/add"><button type="button" class="btn btn-link" >Leave Message>></button></a>
+</div>
