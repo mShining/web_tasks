@@ -1,4 +1,4 @@
-<id>:5
+id:5
 1,2,3,4,5
 <author>
 Li Bai

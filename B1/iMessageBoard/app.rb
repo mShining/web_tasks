@@ -1,6 +1,6 @@
 #Main .rb File in web_tasks/B1 "A Message Board"
 #150722 by mShining
-#initial version
+#version 2.0(150723)
 
 require 'sinatra'
 #require 'slim'
@@ -107,12 +107,31 @@ class Operation
 	end
 
 	def self.delete(id)
-		#to do
+		info=UniversalProperty.new("UniversalProperty.txt")
+		text=File.readlines("UniversalProperty.txt")
+		text1=File.open("TEMP.txt","w+")
+		num=info.id.to_i
+		num=num - 1
+		text1.puts "<id>:#{num}"
+
+		for i in 1..(num)
+			text1.print i
+			text1.print ","
+		end
+		text1.puts ""
+		for i in 2..(num * 3 + 1)
+			text1.puts text[i]
+		end
+		text1.close()
+		File.delete("UniversalProperty.txt")
+		File.rename("TEMP.txt","UniversalProperty.txt")
+		File.delete("messages/#{num+1}.txt")
 	end
+
 end
 
 
-###Routes as follow###Total: 3 get: 2 post: 1
+###Routes as follow###Total: 3 get: 2 post: 2
 get '/' do
 	#@title = "Index"
 	if params[:select]=='author'
@@ -142,6 +161,14 @@ get '/' do
   erb :index
 end
 
+post '/' do
+	id = params[:id]
+	Operation.delete(id)
+	#sinatra.refresh()       isWrong
+	#need to refresh the page here , haven't found the method yet
+	#todo
+	erb :index
+end
 
 get '/add' do
 	#@title = "Leave Message>>"
