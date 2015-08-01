@@ -1,6 +1,7 @@
 #Main .rb File in web_tasks/B1 "A Message Board"
 #150722 by mShining
 #version 2.0(150723)
+#version 3.0(150731)
 
 require 'sinatra'
 #require 'slim'
@@ -16,10 +17,8 @@ helpers do
   end
 end
 
-set :title => "iMessage Board 3.0"
 
-
-###Routes as follow###Total: 3 get: 2 post: 2
+###Routes as follow###Total: 7 get: 5 post: 2
 ##
 get '/' do
 	#@title = "Index"
@@ -32,14 +31,13 @@ get '/' do
 
       end
   @under=@under.sort
-  erb :"index", :locals => {
-		:title => settings.title}
+  erb :"index", :locals => {:title => "iMessage Board 3.0"}
 end
 
 ##
 get '/add' do
 	#@title = "Leave Message>>"
-	erb :"add",:locals=>{:title => "[Add Message]"}
+	erb :"add",:locals=>{:title => "Add Message"}
 end
 
 post '/add' do
@@ -83,13 +81,15 @@ post '/delete' do
 		message = Message.new(file)
 		if(message.id.to_s == params[:id])
 	          File.delete("messages/#{message.id}.yaml")
-		  Message.delete
-		elsif(message.id > params[:id].to_i)
+		  #Message.delete  注释掉该行及以下数行，取消留言ID随删除操作的变化
+=begin
+    elsif(message.id > params[:id].to_i)
 		   @hash[message.id] = message
 	           @under << message.id
+=end
 		end
   end
-
+=begin
 	if(@under.length>0)
     @under = @under.sort
     i=0
@@ -102,7 +102,8 @@ post '/delete' do
     	i+=1
     end
   end
-	redirect to("/?message=1")
+=end
+	redirect to("/")
 end
 
 get '/author' do	#根据作者查找相关留言
@@ -117,12 +118,10 @@ get '/author' do	#根据作者查找相关留言
 		end
   end
   @under = @under.sort
-  erb :"author", :locals => {
-    :title => settings.title
-  }
+  erb :"author", :locals => {:title => "Search by Author"  }
 end
 
-get '/id' do		#根据时间查找相关留言
+get '/id' do		#根据ID查找相关留言
   @hash = Hash.new
   @hash.clear
   @under = []
@@ -134,9 +133,7 @@ get '/id' do		#根据时间查找相关留言
 	  end
 	end
   @under=@under.sort
-  erb :"author", :locals => {
-    :title => settings.title
-  }
+  erb :"author", :locals => {:title => "Search by ID"  }
 end
 
 get '/date' do		#根据时间查找相关留言
@@ -151,7 +148,5 @@ get '/date' do		#根据时间查找相关留言
 	  end
 	end
   @under=@under.sort
-  erb :"author", :locals => {
-    :title => settings.title
-  }
+  erb :"author", :locals => {:title => "Search by Date"  }
 end

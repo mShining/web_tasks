@@ -21,22 +21,26 @@ class Message#Normally used in read-and-show process
 	# Message类 -> yaml文件
 	def self.add(author,message)
 		@@id += 1
-		d = DateTime.now
+		date = DateTime.now
 
-		year = d.year
-		month = d.month
-		day = d.day
-		d = Date.new(year,month,day)
+		year = date.year
+		month = date.month
+		day = date.day
+		date = Date.new(year,month,day)
 
-		hash = {"author"=> author,"message" => message,"id" =>@@id,"created_at" =>d.to_s }
+		hash = {"author"=> author,"message" => message,"id" =>@@id,"created_at" =>date.to_s }
 		File.open("#{File.dirname(__FILE__)}/messages/#{@@id}.yaml", "wb") {|f| YAML.dump(hash, f) }
+
+    #每添加一次便使全局配置文件中的 id 增加 1 ， 删除时不改变，保证留言ID的唯一性
     hash = {"id" =>@@id}
     File.open("#{File.dirname(__FILE__)}/UniversalProperty.yaml", "wb") {|f| YAML.dump(hash, f) }
 	end
 
+=begin
 	def self.delete
 			@@id= (@@id==0) ? 0 : @@id-1
 	end
+=end
 
   def self.[](slug)
     @messages[slug]
@@ -56,6 +60,9 @@ class Message#Normally used in read-and-show process
 		@created_at = text[2].split(":")[1]
 		@message = text[3].split(":")[1]
 =end
+
+    #每次加载Message类时读取全局配置文件中的 id ，保证每次重启应用后留言ID的延续性
+    #（在主页显示留言板时为第一次，这保证了这个重要读取是在所有其他操作之前进行的）
     loadfile=YAML.load(File.open("#{File.dirname(__FILE__)}/UniversalProperty.yaml"))
     @@id=loadfile["id"]
 
