@@ -19,7 +19,7 @@ class Message#Normally used in read-and-show process
 	end
 
 	# Message类 -> yaml文件
-	def self.add(author,message,title)
+	def self.add(author,message)
 		@@id += 1
 		d = DateTime.now
 
@@ -30,6 +30,8 @@ class Message#Normally used in read-and-show process
 
 		hash = {"author"=> author,"message" => message,"id" =>@@id,"created_at" =>d.to_s }
 		File.open("#{File.dirname(__FILE__)}/messages/#{@@id}.yaml", "wb") {|f| YAML.dump(hash, f) }
+    hash = {"id" =>@@id}
+    File.open("#{File.dirname(__FILE__)}/UniversalProperty.yaml", "wb") {|f| YAML.dump(hash, f) }
 	end
 
 	def self.delete
@@ -54,7 +56,11 @@ class Message#Normally used in read-and-show process
 		@created_at = text[2].split(":")[1]
 		@message = text[3].split(":")[1]
 =end
-		@file_path = ayaml
+    loadfile=YAML.load(File.open("#{File.dirname(__FILE__)}/UniversalProperty.yaml"))
+    @@id=loadfile["id"]
+
+
+    @file_path = ayaml
     yaml = File.new(ayaml).lines.take_while{ |line| !line.strip.empty? }
     @offset = yaml.length
     @options = YAML.load(yaml.join)
