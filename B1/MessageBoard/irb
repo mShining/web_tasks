@@ -1,0 +1,6 @@
+ruby-1.9.2-p180 :002 > require './main'
+DataObjects::URI.new with arguments is deprecated, use a Hash of URI components (/home/daz/.rvm/gems/ruby-1.9.2-p180/gems/dm-do-adapter-1.1.0/lib/dm-do-adapter/adapter.rb:231:in `new')
+=> true
+
+ruby-1.9.2-p180 :003 > Task.auto_migrate!
+=> true
