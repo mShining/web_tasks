@@ -112,8 +112,16 @@ get '/author' do	#根据作者查找相关留言
   @under = []
   Dir.glob("#{File.dirname(__FILE__)}/messages/*.yaml").each do |file|
     message = Message.new(file)
-		if(message.author == params[:author])
-	          @hash[message.id] = message
+
+    #实现模糊搜索
+    s=params[:author]
+    flag=false
+    if(message.author.include?s and s.length>0)
+      flag=true
+    end
+
+		if(flag)
+	    @hash[message.id] = message
 		  @under << message.id
 		end
   end
