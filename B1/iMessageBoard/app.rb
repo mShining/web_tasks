@@ -111,7 +111,7 @@ get '/author' do	#根据作者查找相关留言
     #实现模糊搜索
     s=params[:author]
     flag=false
-    if(message.author.include?s and s.length>0)
+    if(message.author.include?s)  # and s.length>0 实现空查询返回所有留言
       flag=true
     end
 
@@ -154,7 +154,7 @@ get '/date' do		#根据时间查找相关留言
       flag=true
     end
 
-	  if(flag and s2.length>0)
+	  if(flag)           # and s2.length>0    实现空查询返回所有留言
 	    @hash[message.id] = message
 	    @under << message.id
 	  end
