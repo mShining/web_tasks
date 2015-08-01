@@ -34,6 +34,11 @@
 		<input class="form-control" type='text' name="id">
 		<button type='submit' class="btn btn-default">Search</button>
 	</form>
+	<form class="form-inline" method='get' action="/date">
+		<label>&nbsp;&nbsp;Date&nbsp;&nbsp;</label>
+		<input class="form-control" type='text' name="date">
+		<button type='submit' class="btn btn-default">Search</button>
+	</form>
 
 
 
@@ -73,15 +78,15 @@
 	message = @hash[@under[i]] %>
     <form action="delete" method="post">
     <article class="post">
-      <header>
-        <h1><%= message.id %>)  <%= message.title %></h1>
+
+        <h1><%= message.id %></h1>
 
 				<section class="content">
 	        <%= message.message %>
 	      </section>
 
         <div class="date" align="right"><%= message.created_at %> - by <%= message.author %></div>
-      </header>
+
 
 
       <input type="type" value="<%= message.id%>" name="id" style="display:none">

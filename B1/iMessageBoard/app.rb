@@ -11,11 +11,6 @@ require 'erb'
 #DataMapper.finalize
 require './message'
 
-helpers do
-  def messages
-    Message.message
-  end
-end
 
 
 ###Routes as follow###Total: 7 get: 5 post: 2
@@ -64,9 +59,9 @@ post '/add' do
 	author = params[:author]
 	message = params[:message]
 	if(author=="" || author ==nil)
-	redirect to("/add?mess=[nullauthor]")
+	redirect to("/add?mess=null-author")
 	elsif(message.length<10)
-	redirect to("/add?mess=illgalmessage")
+	redirect to("/add?mess=illgal-message")
 	else
 	Message.add(params[:author],params[:message])
 	end
@@ -126,7 +121,7 @@ get '/author' do	#根据作者查找相关留言
 		end
   end
   @under = @under.sort
-  erb :"author", :locals => {:title => "Search by Author"  }
+  erb :"search", :locals => {:title => "Search by Author"  }
 end
 
 get '/id' do		#根据ID查找相关留言
@@ -141,7 +136,7 @@ get '/id' do		#根据ID查找相关留言
 	  end
 	end
   @under=@under.sort
-  erb :"author", :locals => {:title => "Search by ID"  }
+  erb :"search", :locals => {:title => "Search by ID"  }
 end
 
 get '/date' do		#根据时间查找相关留言
@@ -150,11 +145,20 @@ get '/date' do		#根据时间查找相关留言
   @under = []
   Dir.glob("#{File.dirname(__FILE__)}/messages/*.yaml").each do |file|
 	  message = Message.new(file)
-	  if(message.created_at.to_s == params[:date])
+
+    #实现模糊搜索
+    s1=message.created_at.to_s
+    s2=params[:date]
+    flag=false
+    if(s1.include?s2)
+      flag=true
+    end
+
+	  if(flag and s2.length>0)
 	    @hash[message.id] = message
 	    @under << message.id
 	  end
 	end
   @under=@under.sort
-  erb :"author", :locals => {:title => "Search by Date"  }
+  erb :"search", :locals => {:title => "Search by Date"  }
 end

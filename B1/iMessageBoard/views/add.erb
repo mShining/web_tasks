@@ -1,9 +1,7 @@
 <!-- /add In ERB -->
-
 <title> <%= title %> </title>
-<h3>&nbsp;</h3> <!-- for beauty-->
-<h2>This is LeaveMessage Page</h2>
-<h3>&nbsp;</h3> <!-- for beauty-->
+
+<h1>大家好，我是 留言 界面</h1>
 
 <!--
 <div class="error">
@@ -15,9 +13,9 @@
 		<label>&nbsp;Author &nbsp;&nbsp;:</label>
 		<input type="text"  name="author">
 
-		<h3></h3> <!-- for beauty-->
+		<h3></h3> <!-- for beauty--
 		<label>Message :</label>
-		<h3></h3> <!-- for beauty-->
+		<h3></h3> <!-- for beauty--
 		<!-- <input type="text"  name="message"> --
 		<textarea name="message" placeholder="input your message here"></textarea>
 
@@ -31,12 +29,16 @@ mess = params[:mess]
 <p ><font color="red"><%=mess%> </font></p>
 <% end %>
 <hr>
+<h3>&nbsp;</h3> <!-- for beauty-->
+
 <form action="add" method="post">
 	<!-- tilte:<input type="text" name="title"><br> -->
-	author:<input type="text" name="author"><br>
+	&nbsp;&nbsp;author&nbsp;&nbsp;:<input type="text" name="author"><br>
+	<h3></h3>
 	message:<textarea name="message" ></textarea><br>
+	<h1></h1>
 	<input align="center"  type="submit" value="提交">
 </form>
 
 
-<a class="" href="/"><button class="btn btn-link">Index</button></a>
+<a class="" href="/"><button class="btn btn-link">返回主页</button></a>

@@ -73,8 +73,23 @@ class Message#Normally used in read-and-show process
     @options = YAML.load(yaml.join)
 	end
 
-  %w(title message author created_at date id).each do |m|
-    class_eval "def #{m};@options['#{m}'];end"
+  def title
+    @options["title"]
+  end
+  def message
+    @options["message"]
+  end
+  def author
+    @options["author"]
+  end
+  def created_at
+    @options['created_at']
+  end
+  def date
+    @options["date"]
+  end
+  def id
+    @options["id"]
   end
 
 
