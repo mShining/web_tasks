@@ -1,0 +1,35 @@
+<!-- /register In ERB -->
+
+<div align="center">
+
+<h3>&nbsp;</h3> <!-- for beauty-->
+<h2>This is Register Page</h2>
+<h3>&nbsp;</h3> <!-- for beauty-->
+
+<%
+mess = params[:mess]
+%>
+<p><font color="red"><%= mess%></font></p>
+
+<hr>
+
+<form class="form-inline" method="POST" action="/register">
+
+		<label>username:</label>
+		<input type="text"  name="username" placeholder="input your username here">
+
+		<h3></h3> <!-- for beauty-->
+		<label>password:</label>
+		<input type="password" name="password" placeholder="input your password here"></text>
+		<h3></h3> <!-- for beauty-->
+		<label>confirm it:</label>
+		<input type="password" name="password2" placeholder="input your password again"></text>
+
+		<h3></h3> <!-- for beauty-->
+
+	<button type="submit" class="btn btn-default">Add now</button>
+</form>
+
+<a class="" href="/"><button class="btn btn-link">Index</button></a>
+
+</div>

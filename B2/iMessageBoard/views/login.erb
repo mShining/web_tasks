@@ -1,0 +1,34 @@
+<!-- Index(/) In ERB -->
+
+<div align="center">
+
+<%
+mess = params[:mess]
+%>
+<hr>
+<%if(mess!=nil)%>
+<p><font color="red"><%= mess%></font></p>
+<% end%>
+
+<h3>&nbsp;</h3> <!-- for beauty-->
+<h2>This is Login Page</h2>
+<h3>&nbsp;</h3> <!-- for beauty-->
+
+
+<form class="form-inline" method="post" action="/login">
+
+		<label>username:</label>
+		<input type="text" name="username">
+
+		<h3></h3> <!-- for beauty-->
+		<label>password:</label>
+		<input type="password" name="password"></textarea>
+		<h3></h3> <!-- for beauty-->
+		<hr>
+		<button type="submit" class="btn btn-default">login in</button>
+</form>
+
+
+<a class="" href="/register"><button class="btn btn-link">register now</button></a>
+
+</div>

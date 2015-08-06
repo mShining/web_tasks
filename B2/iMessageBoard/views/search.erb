@@ -1,0 +1,61 @@
+<!-- /search In ERB -->
+<title> <%= title %> </title>
+
+<h1>大家好，我是 查询 界面</h1>
+<a class="" href="/"><button class="btn btn-link">返回主页</button></a>
+
+<h1></h1>
+
+<form action="author" method="get">
+  <table>
+	<tbody>
+	  <tr>
+		查找以下用户留言：<td><input type="text" name="author" placeholder="author's name"></td><td><input type="submit" value="go"></td>
+	  </tr>
+	</tbody>
+  </table>
+</form>
+<form action="id" methor="get">
+  <table>
+	<tbody>
+	  <tr>
+		查找以下ID留言：<td><input type="text" name="id" placeholder="message's ID"></td><td><input type="submit" value="go"></td>
+	  </tr>
+	</tbody>
+  </table>
+</form>
+<section id="messages">
+<form action="date" methor="get">
+  <table>
+	<tbody>
+	  <tr>
+		查找以下日期留言：<td><input type="text" name="date" placeholder="yyyy-mm-dd"></td><td><input type="submit" value="go"></td>
+	  </tr>
+	</tbody>
+  </table>
+</form>
+<section id="messages">
+共找到<%=@hash.size %>条留言
+
+  <%	i=@under.size-1
+
+	while(i>=0) do
+	message = @hash[@under[i]] %>
+    <form action="delete" method="post">
+    <article class="post">
+      <header>
+        <h1><%= message.id %>)  <%= message.title %></h1>
+        <div class="date"><%= message.created_at %> - by <%= message.author %></div>
+      </header>
+
+      <section class="content">
+        <%= message.message %>
+      </section>
+      <input type="type" name="id" value="<%= message.id%>" style="display:none">
+      <input type="submit" value="删除" >
+    </article>
+    </form>
+  <hr>
+  <%	i=i-1
+	end %>
+</section>
