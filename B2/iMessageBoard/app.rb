@@ -222,3 +222,7 @@ get '/date' do		#根据时间查找相关留言
   @under=@under.sort
   erb :"search", :locals => {:title => "Search by Date"  }
 end
+
+after do
+  ActiveRecord::Base.clear_active_connections!
+end
