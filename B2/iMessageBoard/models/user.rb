@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
     def add(name,password)
       user = User.new(:username=>name,:password=>password)
       user.save
+      return user
     end
 
     def getuser(name,password)####################

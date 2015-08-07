@@ -54,7 +54,7 @@ CREATE TABLE `users` (
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -63,7 +63,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'guest','123456'),(2,'guest2','123456'),(3,'admin','admin'),(4,'Li Bai','123456'),(5,'Du Fu','123456'),(6,'Su Shi','123456'),(7,'Shakespeare','123456'),(8,'Hegel','123456'),(9,'Harry Porter','123456'),(10,'Voldemort','654321');
+INSERT INTO `users` VALUES (1,'guest','123456'),(2,'guest2','123456'),(3,'admin','admin'),(4,'Li Bai','123456'),(5,'Du Fu','123456'),(6,'Su Shi','123456'),(7,'Shakespeare','123456'),(8,'Hegel','123456'),(9,'Harry Porter','123456'),(10,'Voldemort','654321'),(11,'FunctionTest','test');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -76,4 +76,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-08-07 15:24:24
+-- Dump completed on 2015-08-07 15:35:55

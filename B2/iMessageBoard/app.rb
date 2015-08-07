@@ -131,8 +131,11 @@ post '/register' do
   elsif(params[:password] != params[:password2])
     redirect to("/register?mess=different-passwords")
   else
-    User.add(params[:username],params[:password])
-    redirect to("/login")
+    user=User.add(params[:username],params[:password])        ##实现注册后直接返回主页且为已登录状态
+    session['user'] = user
+    session['work'] =TRUE
+    redirect to("/")
+
   end
 end
 
