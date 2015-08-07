@@ -8,6 +8,11 @@ class Message
 
   @@id=0
 
+  #每次加载Message类时读取全局配置文件中的 id ，保证每次重启应用后留言ID的延续性
+  #（在主页显示留言板时为第一次，这保证了这个重要读取是在所有其他操作之前进行的）
+  loadfile=YAML.load(File.open("#{File.dirname(__FILE__)}/UniversalProperty.yaml"))
+  @@id=loadfile["id"]
+
   def self.getId
     @@id
   end
@@ -19,12 +24,6 @@ class Message
 ######################
 
 	def initialize(ayaml)
-
-    #每次加载Message类时读取全局配置文件中的 id ，保证每次重启应用后留言ID的延续性
-    #（在主页显示留言板时为第一次，这保证了这个重要读取是在所有其他操作之前进行的）
-    loadfile=YAML.load(File.open("#{File.dirname(__FILE__)}/UniversalProperty.yaml"))
-    @@id=loadfile["id"]
-
 
     @file_path = ayaml
     yaml = File.new(ayaml).lines.take_while{ |line| !line.strip.empty? }

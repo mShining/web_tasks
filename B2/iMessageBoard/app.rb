@@ -11,6 +11,7 @@ require './message'
 require './manager'
 
 require './models/user'
+require './models/moMessage'
 
 MessageManager = Manager.new  #New一个管理留言类的实例
 
@@ -46,6 +47,7 @@ post '/login' do  #Use Session
 end
 
 ##主页留言列表##
+=begin
 get '/' do
 	if session[:work] == TRUE
 		@hash = Hash.new
@@ -62,7 +64,28 @@ get '/' do
 		redirect to('login')
 	end
 end
+=end
 
+get '/' do
+	if session[:work] == TRUE
+		@hash = Hash.new
+	  @under = []
+
+	  for id in 1..Message.getId
+      message = MoMessage.getmess(id)
+      if (message.class == MoMessage)#中间可能有些ID的留言已经被删除
+        @hash[message.mess_id] = message
+  	    @under << message.mess_id
+      end
+
+    end
+
+	  @under=@under.sort
+	  erb :"index", :locals => {:title => "iMessage Board 3.0"}
+	else
+		redirect to('login')
+	end
+end
 
 ##留言##
 get '/add' do
@@ -72,6 +95,8 @@ get '/add' do
 end
 
 post '/add' do
+  thisuserid=session['user'].id
+
 	author = params[:author]
 	message = params[:message]
 	if(author=="" || author ==nil)
@@ -79,7 +104,7 @@ post '/add' do
 	elsif(message.length<10)
 	redirect to("/add?mess=illgal-message")
 	else
-	MessageManager.add(params[:author],params[:message])
+	MessageManager.add(params[:author],params[:message],thisuserid)
 	end
 	redirect to('/')
 end
@@ -109,7 +134,7 @@ post '/register' do
 end
 
 post '/delete' do
-  MessageManager.delete(params[:id])
+  MessageManager.delete(params[:deleteid])
 	redirect to("/")
 end
 
@@ -118,21 +143,25 @@ get '/author' do	#根据作者查找相关留言
   @hash = Hash.new
   @hash.clear
   @under = []
-  Dir.glob("#{File.dirname(__FILE__)}/messages/*.yaml").each do |file|
-    message = Message.new(file)
 
-    #实现模糊搜索
-    s=params[:author]
-    flag=false
-    if(message.author.include?s)  # and s.length>0 实现空查询返回所有留言
-      flag=true
+  for id in 1..Message.getId
+    message = MoMessage.getmess(id)
+    if (message.class == MoMessage)#中间可能有些ID的留言已经被删除
+
+      #实现模糊搜索
+      s=params[:author]
+      flag=false
+      if(message.author.include?s)  # and s.length>0 实现空查询返回所有留言
+        flag=true
+      end
+
+  		if(flag)
+  	    @hash[message.mess_id] = message
+  		  @under << message.mess_id
+  		end
     end
-
-		if(flag)
-	    @hash[message.id] = message
-		  @under << message.id
-		end
   end
+
   @under = @under.sort
   erb :"search", :locals => {:title => "Search by Author"  }
 end
@@ -141,13 +170,23 @@ get '/id' do		#根据ID查找相关留言
   @hash = Hash.new
   @hash.clear
   @under = []
-  Dir.glob("#{File.dirname(__FILE__)}/messages/*.yaml").each do |file|
-	  message = Message.new(file)
-	  if(message.id.to_s == params[:id])
-	    @hash[message.id] = message
-	    @under << message.id
-	  end
-	end
+  for id in 1..Message.getId
+    message = MoMessage.getmess(id)
+    if (message.class == MoMessage)#中间可能有些ID的留言已经被删除
+
+      #实现模糊搜索
+      s=params[:id]
+      flag=false
+      if(message.mess_id.to_s.include?s)  # and s.length>0 实现空查询返回所有留言
+        flag=true
+      end
+
+  		if(flag)
+  	    @hash[message.mess_id] = message
+  		  @under << message.mess_id
+  		end
+    end
+  end
   @under=@under.sort
   erb :"search", :locals => {:title => "Search by ID"  }
 end
@@ -156,22 +195,24 @@ get '/date' do		#根据时间查找相关留言
   @hash = Hash.new
   @hash.clear
   @under = []
-  Dir.glob("#{File.dirname(__FILE__)}/messages/*.yaml").each do |file|
-	  message = Message.new(file)
+  for id in 1..Message.getId
+    message = MoMessage.getmess(id)
+    if (message.class == MoMessage)#中间可能有些ID的留言已经被删除
 
-    #实现模糊搜索
-    s1=message.created_at.to_s
-    s2=params[:date]
-    flag=false
-    if(s1.include?s2)
-      flag=true
+      #实现模糊搜索
+      s1=message.created_at.to_s
+      s2=params[:date]
+      flag=false
+      if(s1.include?s2)
+        flag=true
+      end
+
+  		if(flag)
+  	    @hash[message.mess_id] = message
+  		  @under << message.mess_id
+  		end
     end
-
-	  if(flag)           # and s2.length>0    实现空查询返回所有留言
-	    @hash[message.id] = message
-	    @under << message.id
-	  end
-	end
+  end
   @under=@under.sort
   erb :"search", :locals => {:title => "Search by Date"  }
 end

@@ -18,7 +18,7 @@ class Manager
 
 
 	# Message类 -> yaml文件
-	def add(author,message)
+	def add(author,message,userid)
     Message.setId = Message.getId + 1
 
     date = DateTime.now
@@ -27,15 +27,20 @@ class Manager
 		day = date.day
 		date = Date.new(year,month,day)
 
-		hash = {"author"=> author,"message" => message,"id" => Message.getId,"created_at" => date.to_s }
-		File.open("#{File.dirname(__FILE__)}/messages/#{Message.getId}.yaml", "wb") {|f| YAML.dump(hash, f) }
+		#hash = {"author"=> author,"message" => message,"id" => Message.getId,"created_at" => date.to_s }
+		#File.open("#{File.dirname(__FILE__)}/messages/#{Message.getId}.yaml", "wb") {|f| YAML.dump(hash, f) }
+		#上述两句被替换成以下一句，与数据库的交互
+		MoMessage.add(Message.getId,userid,message,date.to_s,author)
+
+
 
     #每添加一次便使全局配置文件中的 id 增加 1 ， 删除时不改变，保证留言ID的唯一性
     hash = {"id" =>Message.getId}
     File.open("#{File.dirname(__FILE__)}/UniversalProperty.yaml", "wb") {|f| YAML.dump(hash, f) }
 	end
 
-  def delete(id)
+  def delete(theid)
+=begin
     @hash = Hash.new
     @hash.clear
     @under = []
@@ -45,7 +50,14 @@ class Manager
   	          File.delete("messages/#{message.id}.yaml")
   		end
     end
+=end
+
+  	message = MoMessage.getmess(theid)
+		MoMessage.delete(theid)
+		message.destroy
+
   end
+
 =begin
   def show
     @hash = Hash.new
