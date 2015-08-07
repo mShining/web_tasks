@@ -121,8 +121,11 @@ get '/register' do
 end
 
 post '/register' do
+
   if(params[:username] == nil || params[:username]=="")
     redirect to("/register?mess=null-username")
+  elsif(User.isAlreadyExist(params[:username]))
+    redirect to("/register?mess=User-Already-Exists!")        ##判断是否已存在同名用户，不允许注册
   elsif(params[:password] == nil || params[:password] == "")
     redirect to("/register?mess=null-password")
   elsif(params[:password] != params[:password2])

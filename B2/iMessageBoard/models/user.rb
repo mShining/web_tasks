@@ -31,6 +31,16 @@ class User < ActiveRecord::Base
       end
     end
 
+    def isAlreadyExist(name)####################
+       user = User.find_by_username(name)#####
+       if(user == nil)
+         return false
+       else
+         return true
+       end
+
+    end
+
   end
 
 
