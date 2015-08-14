@@ -7,19 +7,22 @@
 require 'sinatra'
 require 'erb'
 
-require './message'
-require './manager'
+#require './message'
+#require './manager'
 
 require './models/user'
 require './models/moMessage'
 
-MessageManager = Manager.new  #New一个管理留言类的实例
+#cattr_accessor :ID
+
+#MessageManager = Manager.new  #New一个管理留言类的实例
 
 configure do
   enable :sessions	#启用session
 end
 
-
+dbconfig = YAML::load(File.open(File.dirname(__FILE__)+'/config.yaml'))
+ActiveRecord::Base.establish_connection(dbconfig)
 
 ###Routes as follow###Total: 12 get: 8 post: 4
 ##
@@ -35,7 +38,7 @@ post '/login' do  #Use Session
    elsif(params[:password]==nil||params[:password]=="")
      redirect to("/login?mess=null-password")
    else
-     user=User.getuser(params[:username],params[:password])
+     user=User.auth(params[:username],params[:password])
      if(user == "No-Such-User!" or user == "Wrong-Password!")
       redirect to("/login?mess=#{user}")
      else
@@ -50,34 +53,18 @@ end
 =begin
 get '/' do
 	if session[:work] == TRUE
-		@hash = Hash.new
-	  @under = []
-	  Dir.glob("#{File.dirname(__FILE__)}/messages/*.yaml").each do |file|
-	        message = Message.new(file)
-	        @hash[message.id] = message
-	        @under << message.id
+    loadfile=YAML.load(File.open("#{File.dirname(__FILE__)}/UniversalProperty.yaml"))
+    @@ID = loadfile["id"]
 
-	      end
-	  @under=@under.sort
-	  erb :"index", :locals => {:title => "iMessage Board 3.0"}
-	else
-		redirect to('login')
-	end
-end
-=end
-
-get '/' do
-	if session[:work] == TRUE
 		@hash = Hash.new
 	  @under = []
 
-	  for id in 1..Message.getId
+	  for id in 1..@@ID
       message = MoMessage.getmess(id)
       if (message.class == MoMessage)#中间可能有些ID的留言已经被删除
         @hash[message.mess_id] = message
   	    @under << message.mess_id
       end
-
     end
 
 	  @under=@under.sort
@@ -85,6 +72,30 @@ get '/' do
 	else
 		redirect to('login')
 	end
+end
+=end
+get '/'do
+if session[:work] == TRUE
+  loadfile=YAML.load(File.open("#{File.dirname(__FILE__)}/UniversalProperty.yaml"))
+  @@ID = loadfile["id"]
+
+  @hash = Hash.new
+  @under = []
+
+  for id in 1..@@ID
+    message = MoMessage.find_by_mess_id(id)
+    if (message.class == MoMessage)  #中间可能有些ID的留言已经被删除
+      @hash[message.mess_id] = message
+      @under << message.mess_id
+    end
+  end
+
+  @under=@under.sort
+  erb :"index", :locals => {:title => "iMessage Board 3.0"}
+else
+  redirect to('login')
+end
+
 end
 
 ##留言##
@@ -100,11 +111,22 @@ post '/add' do
 	author = params[:author]
 	message = params[:message]
 	if(author=="" || author ==nil)
-	redirect to("/add?mess=null-author")
+	  redirect to("/add?mess=null-author")
 	elsif(message.length<10)
-	redirect to("/add?mess=illgal-message")
+	  redirect to("/add?mess=illgal-message")
 	else
-	MessageManager.add(params[:author],params[:message],thisuserid)
+	  #开始添加操作
+    @@ID+=1
+    date = DateTime.now
+		year = date.year
+		month = date.month
+		day = date.day
+		date = Date.new(year,month,day)
+    mess = MoMessage.new(:mess_id=>@@ID,:user_id=>thisuserid,:mess=>params[:message],:created_at=>date.to_s,:author=>params[:author])
+    mess.save
+    #每添加一次便使全局配置文件中的 id 增加 1 ， 删除时不改变，保证留言ID的唯一性
+    hash = {"id" => @@ID}
+    File.open("#{File.dirname(__FILE__)}/UniversalProperty.yaml", "wb") {|f| YAML.dump(hash, f) }
 	end
 	redirect to('/')
 end
@@ -131,7 +153,10 @@ post '/register' do
   elsif(params[:password] != params[:password2])
     redirect to("/register?mess=different-passwords")
   else
-    user=User.add(params[:username],params[:password])        ##实现注册后直接返回主页且为已登录状态
+    #user=User.add(params[:username],params[:password])        ##实现注册后直接返回主页且为已登录状态
+    user = User.new(:username=>params[:username],:password=>params[:password])
+    user.save
+
     session['user'] = user
     session['work'] =TRUE
     redirect to("/")
@@ -140,7 +165,10 @@ post '/register' do
 end
 
 post '/delete' do
-  MessageManager.delete(params[:deleteid])
+  #MessageManager.delete(params[:deleteid])
+  message = MoMessage.find_by_mess_id(params[:deleteid])
+  MoMessage.delete(params[:deleteid])
+  message.destroy
 	redirect to("/")
 end
 
@@ -150,8 +178,8 @@ get '/author' do	#根据作者查找相关留言
   @hash.clear
   @under = []
 
-  for id in 1..Message.getId
-    message = MoMessage.getmess(id)
+  for id in 1..@@ID
+    message = MoMessage.find_by_mess_id(id)
     if (message.class == MoMessage)#中间可能有些ID的留言已经被删除
 
       #实现模糊搜索
@@ -176,8 +204,8 @@ get '/id' do		#根据ID查找相关留言
   @hash = Hash.new
   @hash.clear
   @under = []
-  for id in 1..Message.getId
-    message = MoMessage.getmess(id)
+  for id in 1..@@ID
+    message = MoMessage.find_by_mess_id(id)
     if (message.class == MoMessage)#中间可能有些ID的留言已经被删除
 
       #实现模糊搜索
@@ -201,8 +229,8 @@ get '/date' do		#根据时间查找相关留言
   @hash = Hash.new
   @hash.clear
   @under = []
-  for id in 1..Message.getId
-    message = MoMessage.getmess(id)
+  for id in 1..@@ID
+    message = MoMessage.find_by_mess_id(id)
     if (message.class == MoMessage)#中间可能有些ID的留言已经被删除
 
       #实现模糊搜索
